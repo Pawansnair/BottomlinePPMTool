@@ -17,6 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/project")
+@CrossOrigin
 public class ProjectController {
 
     @Autowired
@@ -25,19 +26,19 @@ public class ProjectController {
     private MapValidationErrorService mapValidationErrorService;
     @PostMapping("")
     public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project ,BindingResult result){
-
         ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationService((result));
         if(errorMap!=null){ return errorMap;}
-
         Project project1 = projectService.saveOrUpdateProject(project);
         return new ResponseEntity<Project>(project1, HttpStatus.CREATED);
     }
+
     @GetMapping("/{projectId}")
     public ResponseEntity<?> getProjectById(@PathVariable String projectId){
         Project project = projectService.getProjectByIdentifier(projectId);
         return new ResponseEntity<Project>(project,HttpStatus.OK);
     }
-    @GetMapping("/all")
+
+    @GetMapping("/")
     public Iterable<Project> getAllProject(){
         return projectService.findAllProjects();
     }
